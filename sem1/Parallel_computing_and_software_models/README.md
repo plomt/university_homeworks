@@ -1,1 +1,1 @@
-g++  -mavx2 -march=native -o lab .\Lab_Bezzub_Pavel.cpp
+gcc  -mavx2 -march=native -o lab main.c -lm
