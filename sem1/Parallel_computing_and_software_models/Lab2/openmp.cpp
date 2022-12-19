@@ -5,16 +5,16 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
-#define THREAD_NUM 8
+#define THREAD_NUM 6
 using namespace std;
 
 #pragma intrinsic(__rdtsc)
 
-double func(const int* vec1, const int* vec2, size_t n) {
-    double underSqrt = 0;
-    for (int i = 0; i < n; i++)
-        underSqrt += pow(vec1[i] - vec2[i], 2);
-    return underSqrt;
+double func(const int* vec1, const int* vec2, size_t n, int index, int step) {
+    double result = 0;
+    for (int i = index; i < index + step; i++)
+        result += pow(vec1[i] - vec2[i], 2);
+    return result;
 }
 
 int main(int argc, char **argv){
@@ -34,12 +34,16 @@ int main(int argc, char **argv){
 
     double result = 0;    
     unsigned long long int start_time, end_time;
+    int step = n / THREAD_NUM;
 
     start_time = __rdtsc();
-    //omp_set_dynamic(0);
-    #pragma omp parallel num_threads(THREAD_NUM)
+    #pragma omp parallel for
+    for (int i = 0; i < THREAD_NUM; i++)
     {
-        result += func(vec1, vec2, n);
+        if (i == THREAD_NUM - 1)
+            result += func(vec1, vec2, n, i * step, n - i * step);
+        else
+            result += func(vec1, vec2, n, i * step, step);
     }
     end_time = __rdtsc();
     printf("Result OpenMP(): %f", sqrt(result));

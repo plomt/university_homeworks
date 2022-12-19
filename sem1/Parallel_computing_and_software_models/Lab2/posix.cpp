@@ -9,7 +9,7 @@
 #include <math.h>
 #include <x86intrin.h>
 
-#define NUM_THREADS           4
+#define NUM_THREADS           6
 #define ERROR_CREATE_THREAD -11
 #define ERROR_JOIN_THREAD   -12
 #define BAD_MESSAGE         -13
