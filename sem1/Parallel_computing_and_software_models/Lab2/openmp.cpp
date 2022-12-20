@@ -6,7 +6,7 @@
 #include <fstream>
 #include <math.h>
 #include <chrono>
-#define THREAD_NUM 6
+#define THREAD_NUM 4
 using namespace std;
 
 double func(const int* vec1, const int* vec2, size_t n, int index, int step) {
@@ -17,6 +17,9 @@ double func(const int* vec1, const int* vec2, size_t n, int index, int step) {
 }
 
 int main(int argc, char **argv){
+
+    omp_set_num_threads(THREAD_NUM);
+
     if (argc < 2)
         exit(1);
     int n = atoi(argv[1]);
@@ -38,12 +41,13 @@ int main(int argc, char **argv){
     #pragma omp parallel for
     for (int i = 0; i < THREAD_NUM; i++)
     {
-        if (i == THREAD_NUM - 1)
-            result += func(vec1, vec2, n, i * step, n - i * step);
-        else
+       // if (i == THREAD_NUM - 1)
+       //     result += func(vec1, vec2, n, i * step, n - i * step);
+       // else
             result += func(vec1, vec2, n, i * step, step);
     }
     chrono::steady_clock::time_point end_time = chrono::steady_clock::now();
+    
     printf("Result OpenMP(): %f", sqrt(result));
     printf("\n");
     printf("Time OpenMP(): %llu", chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count());

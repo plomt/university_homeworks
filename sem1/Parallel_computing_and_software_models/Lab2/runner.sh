@@ -4,7 +4,7 @@
 > logger1
 > logger2
 
-for var in {10..10000}
+for var in `seq 1 10000 1000000`
 do
 	./lab $var >> logger0
 	./lab1 $var >> logger1

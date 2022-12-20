@@ -63,7 +63,8 @@ int main(int argc, char **argv) {
         td[i].vec2 = vec2;
         td[i].n = n;
         td[i].index = i * step;
-        td[i].step = (i == NUM_THREADS - 1) ? n - td[i].index : step;
+        //td[i].step = (i == NUM_THREADS - 1) ? n - td[i].index : step;
+        td[i].step = step;
         td[i].result = 0;
 
         status = pthread_create(&threads[i], NULL, threadFunc, (void*)&td[i]);
