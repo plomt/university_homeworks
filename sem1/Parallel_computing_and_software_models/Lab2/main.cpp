@@ -11,8 +11,6 @@
 #include <x86intrin.h>
 using namespace std;
 
-#pragma intrinsic(__rdtsc)
-
 double withoutParallel(const int* vec1, const int* vec2, size_t n) {
 	double underSqrt = 0;
 	for (int i = 0; i < n; i++)
@@ -36,14 +34,13 @@ int main(int argc, char **argv) {
     }
 
 
-    unsigned long long int start_time, end_time;
-
-    start_time = __rdtsc();
+    chrono::steady_clock::time_point start_time = chrono::steady_clock::now();
     double result = withoutParallel(vec1, vec2, n);
-    end_time = __rdtsc();
+    chrono::steady_clock::time_point end_time = chrono::steady_clock::now();
+
     printf("Result withoutParallel(): %f", result);
     printf("\n");
-    printf("Time withoutParallel(): %llu", end_time - start_time);
+    printf("Time withoutParallel(): %lu", chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count());
     printf("\n");
 
     return 0;

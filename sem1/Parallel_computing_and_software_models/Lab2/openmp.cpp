@@ -5,10 +5,9 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include <chrono>
 #define THREAD_NUM 6
 using namespace std;
-
-#pragma intrinsic(__rdtsc)
 
 double func(const int* vec1, const int* vec2, size_t n, int index, int step) {
     double result = 0;
@@ -33,10 +32,9 @@ int main(int argc, char **argv){
     }
 
     double result = 0;    
-    unsigned long long int start_time, end_time;
     int step = n / THREAD_NUM;
 
-    start_time = __rdtsc();
+    chrono::steady_clock::time_point start_time = chrono::steady_clock::now();
     #pragma omp parallel for
     for (int i = 0; i < THREAD_NUM; i++)
     {
@@ -45,10 +43,10 @@ int main(int argc, char **argv){
         else
             result += func(vec1, vec2, n, i * step, step);
     }
-    end_time = __rdtsc();
+    chrono::steady_clock::time_point end_time = chrono::steady_clock::now();
     printf("Result OpenMP(): %f", sqrt(result));
     printf("\n");
-    printf("Time OpenMP(): %llu", end_time - start_time);
+    printf("Time OpenMP(): %llu", chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count());
     printf("\n");
 
     return 0;

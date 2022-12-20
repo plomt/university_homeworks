@@ -17,8 +17,6 @@
 
 using namespace std;
 
-#pragma instrinsic(__rdtsc)
-
 typedef struct thread_data {
     int* vec1;
     int* vec2;
@@ -55,13 +53,11 @@ int main(int argc, char **argv) {
         vec2[i] = i + 2;
     }
 
-    unsigned long long int start_time, end_time;
-
     pthread_t threads[NUM_THREADS];
     threadData_t td[NUM_THREADS];
     int step = n / NUM_THREADS;
 
-    start_time = __rdtsc();
+    chrono::steady_clock::time_point start_time = chrono::steady_clock::now();
     for (int i = 0; i < NUM_THREADS; i++) {
         td[i].vec1 = vec1;
         td[i].vec2 = vec2;
@@ -76,7 +72,6 @@ int main(int argc, char **argv) {
             exit(ERROR_CREATE_THREAD);
         }
     }
-    end_time = __rdtsc();
 
     for (int i = 0; i < NUM_THREADS; i++) {
         status = pthread_join(threads[i], (void**)&status_addr);
@@ -85,13 +80,15 @@ int main(int argc, char **argv) {
              exit(ERROR_JOIN_THREAD);
         }
     }
+
+    chrono::steady_clock::time_point end_time = chrono::steady_clock::now();
     
     double result = 0;    
     for (int i = 0; i < NUM_THREADS; i++)
         result += td[i].result;
 
     printf("Result Posix(): %f\n", sqrt(result));
-    printf("Time Posix(): %llu\n", end_time - start_time);
+    printf("Time Posix(): %lu\n", chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count());
 
     return 0;
 }
