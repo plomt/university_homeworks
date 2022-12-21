@@ -1,7 +1,7 @@
-lab: g++ -mavx2 -march=native -o lab main.cpp -lm
+lab1: g++ -o lab1 main.cpp -lm
 
-lab1: g++ -mavx2 -march=native -fopenmp -o lab1 openmp.cpp -lm
+lab2: g++ -fopenmp -o lab2 openmp.cpp -lm
 
-lab2: g++ -mavx2 -march=native -o lab2 posix.cpp -lm
+lab3: g++ -o lab3 posix.cpp -lm
 
-lab3: g++ -mavx2 -march=native -o lab3 win32.cpp -lm
+lab4: g++ -o lab4 win32.cpp -lm
